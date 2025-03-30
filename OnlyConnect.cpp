@@ -5,24 +5,32 @@
  * TODO: Edit these comments to leave a puzzle for your section leader to solve!
  */
 #include "OnlyConnect.h"
+#include "strlib.h"
+#include <cctype>
 using namespace std;
 
 string onlyConnectize(string phrase) {
-    /* TODO: The next few lines just exist to make sure you don't get compiler
-     * warning messages when this function isn't implemented. Delete this
-     * comment and the next few lines, then implement this function.
-     */
-    (void) phrase;
-    return "";
+    // Base case
+    if (phrase.empty()) {
+        return "";
+    }
+    char first = toupper(phrase[0]);
+    string rest = onlyConnectize(phrase.substr(1));
+
+    // Recursive case
+    if (isalpha(first) && !(first == 'A' || first == 'E' || first == 'I' || first == 'O' || first == 'U')) {
+        return first + rest;
+    }
+    return rest;
 }
-
-
-
-
-
 
 /* * * * * * Provided Test Cases * * * * * */
 #include "GUI/SimpleTest.h"
+
+PROVIDED_TEST("Various cases") {
+    EXPECT_EQUAL(onlyConnectize("For sale: baby shoes, never worn."), "FRSLBBYSHSNVRWRN");
+    EXPECT_EQUAL(onlyConnectize("I'm the bad guy. (Duh!)"), "MTHBDGYDH");
+}
 
 PROVIDED_TEST("Handles single-character inputs.") {
     EXPECT_EQUAL(onlyConnectize("A"), "");
@@ -34,23 +42,12 @@ PROVIDED_TEST("Converts lower-case to upper-case.") {
     EXPECT_EQUAL(onlyConnectize("uppercase"), "PPRCS");
 }
 
-/* TODO: You will need to add your own tests into this suite of test cases. Think about the sorts
- * of inputs we tested here, and, importantly, what sorts of inputs we *didn't* test here. Some
- * general rules of testing:
- *
- *    1. Try extreme cases. What are some very large cases to check? What are some very small cases?
- *
- *    2. Be diverse. There are a lot of possible inputs out there. Make sure you have tests that account
- *       for cases that aren't just variations of one another.
- *
- *    3. Be sneaky. Don't just try standard inputs. Try weird ones that you wouldn't expect anyone to
- *       actually enter, but which are still perfectly legal.
- *
- * Happy testing!
- */
+PROVIDED_TEST("Different cases") {
+    EXPECT_EQUAL(onlyConnectize("Annie Mae, My Sea Anemone Enemy!"), "NNMMYSNMNNMY");
+    EXPECT_EQUAL(onlyConnectize("Antonin Scalia"), "NTNNSCL");
+}
 
-
-
-
-
-
+PROVIDED_TEST("Extreme cases") {
+    EXPECT_EQUAL(onlyConnectize("......."), "");
+    EXPECT_EQUAL(onlyConnectize("0AAIII_-3214'////''(#@!$@"), "");
+}
